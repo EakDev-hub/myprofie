@@ -1,0 +1,197 @@
+name: 🐳 Build and Push Docker Image
+
+on:
+  push:
+    branches: [ "main" ]
+    tags: [ "v*.*.*" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write # For cosign signing
+      security-events: write # For Trivy results upload
+
+    steps:
+    - name: 📂 Checkout repository
+      uses: actions/checkout@v4
+
+    - name: 🔧 Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: 🔐 Log in to Container Registry
+      if: github.event_name != 'pull_request'
+      uses: docker/login-action@v3
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: 🏷️ Extract metadata
+      id: meta
+      uses: docker/metadata-action@v5
+      with:
+        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+        tags: |
+          type=ref,event=branch
+          type=ref,event=pr
+          type=semver,pattern={{version}}
+          type=semver,pattern={{major}}.{{minor}}
+          type=semver,pattern={{major}}
+          type=raw,value=latest,enable={{is_default_branch}}
+        labels: |
+          org.opencontainers.image.title=React Resume Website
+          org.opencontainers.image.description=Modern React Resume Website with TypeScript, Tailwind CSS, and Anime.js animations
+          org.opencontainers.image.vendor=Eak Apisit
+          org.opencontainers.image.licenses=MIT
+          org.opencontainers.image.documentation=https://github.com/${{ github.repository }}
+          maintainer=Eak Apisit
+
+    - name: 🔨 Build and push Docker image
+      id: build
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        platforms: linux/amd64,linux/arm64
+        target: production
+        push: ${{ github.event_name != 'pull_request' }}
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+        cache-from: |
+          type=gha
+          type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:buildcache
+        cache-to: |
+          type=gha,mode=max
+          type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:buildcache,mode=max
+        build-args: |
+          BUILDKIT_INLINE_CACHE=1
+
+    - name: 🛡️ Run Trivy vulnerability scanner
+      if: github.event_name != 'pull_request'
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.version }}
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+
+    - name: 📊 Upload Trivy scan results to GitHub Security tab
+      if: github.event_name != 'pull_request'
+      uses: github/codeql-action/upload-sarif@v3
+      with:
+        sarif_file: 'trivy-results.sarif'
+
+    - name: 🛡️ Run Trivy vulnerability scanner for PR comments
+      if: github.event_name == 'pull_request'
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:pr-${{ github.event.number }}
+        format: 'table'
+        output: 'trivy-results.txt'
+
+    - name: 💬 Comment PR with Trivy results
+      if: github.event_name == 'pull_request'
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const fs = require('fs');
+          const trivyResults = fs.readFileSync('trivy-results.txt', 'utf8');
+          
+          const body = `## 🛡️ Security Scan Results
+          
+          <details>
+          <summary>Trivy Vulnerability Scan</summary>
+          
+          \`\`\`
+          ${trivyResults}
+          \`\`\`
+          
+          </details>`;
+          
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: body
+          });
+
+    - name: 📋 Generate build summary
+      if: always()
+      run: |
+        echo "## 🐳 Docker Build Summary" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "| Property | Value |" >> $GITHUB_STEP_SUMMARY
+        echo "|----------|-------|" >> $GITHUB_STEP_SUMMARY
+        echo "| **Registry** | \`${{ env.REGISTRY }}\` |" >> $GITHUB_STEP_SUMMARY
+        echo "| **Image** | \`${{ env.IMAGE_NAME }}\` |" >> $GITHUB_STEP_SUMMARY
+        echo "| **Tags** | \`${{ steps.meta.outputs.tags }}\` |" >> $GITHUB_STEP_SUMMARY
+        echo "| **Platforms** | \`linux/amd64,linux/arm64\` |" >> $GITHUB_STEP_SUMMARY
+        echo "| **Pushed** | \`${{ github.event_name != 'pull_request' }}\` |" >> $GITHUB_STEP_SUMMARY
+        echo "| **Commit SHA** | \`${{ github.sha }}\` |" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        if [ "${{ github.event_name }}" != "pull_request" ]; then
+          echo "### 🚀 Usage" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`bash" >> $GITHUB_STEP_SUMMARY
+          echo "docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest" >> $GITHUB_STEP_SUMMARY
+          echo "docker run -p 80:80 -p 443:443 ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+        fi
+
+    - name: 🏷️ Create release notes
+      if: startsWith(github.ref, 'refs/tags/')
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const tagName = context.ref.replace('refs/tags/', '');
+          const releaseBody = `## 🚀 Release ${tagName}
+          
+          ### 🐳 Docker Images
+          
+          **Multi-platform images available:**
+          - \`${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${tagName}\`
+          - \`${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest\`
+          
+          **Supported architectures:**
+          - linux/amd64
+          - linux/arm64
+          
+          ### 🛡️ Security
+          - ✅ Vulnerability scanned with Trivy
+          - ✅ Built from secure base images
+          - ✅ Non-root user execution
+          
+          ### 🚀 Quick Start
+          \`\`\`bash
+          docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${tagName}
+          docker run -p 80:80 -p 443:443 ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${tagName}
+          \`\`\`
+          
+          ### 📊 Build Information
+          - **Commit:** ${{ github.sha }}
+          - **Build Date:** $(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          - **Workflow:** ${{ github.workflow }}
+          `;
+          
+          try {
+            await github.rest.repos.createRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag_name: tagName,
+              name: `Release ${tagName}`,
+              body: releaseBody,
+              draft: false,
+              prerelease: tagName.includes('-')
+            });
+            console.log(`Created release for ${tagName}`);
+          } catch (error) {
+            console.log(`Release may already exist: ${error.message}`);
+          }
