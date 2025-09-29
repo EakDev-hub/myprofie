@@ -3,8 +3,7 @@ import { getExperienceData } from '../utils/dataLoader';
 import {
   createScrollAnimation,
   staggerAnimation,
-  animateElement,
-  createTimeline
+  animateElement
 } from '../utils/animations';
 
 const Experience: React.FC = () => {

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { animateElement, createTimeline, staggerAnimation } from '../../utils/animations';
+import { animateElement, createTimeline } from '../../utils/animations';
 
 interface LoadingScreenProps {
   onComplete: () => void;

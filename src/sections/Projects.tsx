@@ -72,10 +72,9 @@ const Projects: React.FC = () => {
 
   // Add advanced hover effects to project cards
   useEffect(() => {
-    projectRefs.current.forEach((ref, index) => {
+    projectRefs.current.forEach((ref) => {
       if (ref) {
         const image = ref.querySelector('.project-image') as HTMLElement;
-        const content = ref.querySelector('.project-content') as HTMLElement;
         const overlay = ref.querySelector('.project-overlay') as HTMLElement;
         const links = ref.querySelectorAll('.project-link');
 

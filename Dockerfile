@@ -1,7 +1,7 @@
 # Multi-stage Docker build for React Resume Website
 
 # Development stage
-FROM node:18-alpine as development
+FROM node:18-alpine AS development
 
 # Set working directory
 WORKDIR /app
@@ -22,7 +22,7 @@ EXPOSE 3000
 CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
 
 # Build stage
-FROM node:18-alpine as build
+FROM node:18-alpine AS build
 
 WORKDIR /app
 
@@ -39,7 +39,7 @@ COPY . .
 RUN npm run build
 
 # Production stage
-FROM nginx:alpine as production
+FROM nginx:alpine AS production
 
 # Copy custom nginx config
 COPY docker/nginx.conf /etc/nginx/nginx.conf

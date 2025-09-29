@@ -1,5 +1,4 @@
 import anime from 'animejs';
-import { AnimationConfig } from '@/types';
 
 // Default animation configurations
 export const defaultAnimations = {
@@ -126,7 +125,7 @@ export const typewriterAnimation = (
     easing: 'linear',
     round: 1,
     update: (anim) => {
-      const progress = Math.round(anim.animatables[0].target.progress);
+      const progress = Math.round((anim.animatables[0].target as any).progress);
       element.textContent = text.substring(0, progress);
     },
   });

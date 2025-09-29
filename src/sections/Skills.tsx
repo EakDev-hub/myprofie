@@ -4,8 +4,7 @@ import {
   createScrollAnimation,
   animateProgressBar,
   animateCounter,
-  staggerAnimation,
-  createAdaptiveAnimation
+  staggerAnimation
 } from '../utils/animations';
 
 const Skills: React.FC = () => {
