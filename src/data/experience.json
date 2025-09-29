@@ -1,0 +1,26 @@
+{
+  "section": {
+    "title": "Experience",
+    "backgroundColor": "bg-gray-50"
+  },
+  "experiences": [
+    {
+      "company": "Tech Company Inc.",
+      "position": "Senior Full Stack Developer",
+      "period": "2022 - Present",
+      "description": "Led development of modern web applications using React, Node.js, and cloud technologies."
+    },
+    {
+      "company": "Digital Agency Ltd.",
+      "position": "Frontend Developer",
+      "period": "2020 - 2022",
+      "description": "Developed responsive web applications and improved user experience across multiple projects."
+    },
+    {
+      "company": "Startup Innovations",
+      "position": "Junior Developer",
+      "period": "2019 - 2020",
+      "description": "Built web applications using JavaScript, HTML, CSS and learned modern development practices."
+    }
+  ]
+}

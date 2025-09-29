@@ -1,0 +1,35 @@
+{
+  "section": {
+    "title": "About Me",
+    "backgroundColor": "bg-white"
+  },
+  "content": {
+    "description": "I'm a passionate full-stack developer with expertise in modern web technologies. I love creating beautiful, functional, and user-friendly applications that solve real-world problems."
+  },
+  "services": [
+    {
+      "title": "Frontend Development",
+      "description": "React, TypeScript, Tailwind CSS",
+      "icon": {
+        "viewBox": "0 0 24 24",
+        "path": "M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
+      }
+    },
+    {
+      "title": "Backend Development",
+      "description": "Node.js, Python, PostgreSQL",
+      "icon": {
+        "viewBox": "0 0 24 24",
+        "path": "M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"
+      }
+    },
+    {
+      "title": "Mobile Development",
+      "description": "React Native, Flutter",
+      "icon": {
+        "viewBox": "0 0 24 24",
+        "path": "M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v12a4 4 0 004 4h4a2 2 0 002-2V5z"
+      }
+    }
+  ]
+}

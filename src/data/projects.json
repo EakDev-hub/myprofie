@@ -1,0 +1,56 @@
+{
+  "section": {
+    "title": "Projects",
+    "backgroundColor": "bg-gray-50"
+  },
+  "projects": [
+    {
+      "title": "E-Commerce Platform",
+      "description": "A full-stack e-commerce solution built with React, Node.js, and PostgreSQL.",
+      "image": "https://via.placeholder.com/400x250",
+      "technologies": ["React", "Node.js", "PostgreSQL", "Stripe"],
+      "links": {
+        "demo": {
+          "url": "#",
+          "label": "Live Demo"
+        },
+        "github": {
+          "url": "#",
+          "label": "GitHub"
+        }
+      }
+    },
+    {
+      "title": "Task Management App",
+      "description": "A collaborative task management application with real-time updates.",
+      "image": "https://via.placeholder.com/400x250",
+      "technologies": ["React", "TypeScript", "Socket.io", "MongoDB"],
+      "links": {
+        "demo": {
+          "url": "#",
+          "label": "Live Demo"
+        },
+        "github": {
+          "url": "#",
+          "label": "GitHub"
+        }
+      }
+    },
+    {
+      "title": "Weather Dashboard",
+      "description": "A responsive weather dashboard with location-based forecasts.",
+      "image": "https://via.placeholder.com/400x250",
+      "technologies": ["React", "API Integration", "Chart.js", "Tailwind"],
+      "links": {
+        "demo": {
+          "url": "#",
+          "label": "Live Demo"
+        },
+        "github": {
+          "url": "#",
+          "label": "GitHub"
+        }
+      }
+    }
+  ]
+}

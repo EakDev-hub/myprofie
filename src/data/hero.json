@@ -1,0 +1,41 @@
+{
+  "personal": {
+    "name": "Apisit Thaosri",
+    "tagline": "Senoir Software Engineering Manager"
+  },
+  "content": {
+    "title": "Hi, I'm",
+    "description": "Senoir Software Engineering Manager"
+  },
+  "metrics": [
+    {
+      "value": 50,
+      "suffix": "+",
+      "label": "Projects",
+      "animationDelay": 1000
+    },
+    {
+      "value": 10,
+      "suffix": "+",
+      "label": "Years Experience",
+      "animationDelay": 1200
+    }
+  ],
+  "actions": [
+    {
+      "label": "Get In Touch",
+      "href": "#contact",
+      "type": "primary",
+      "glow": true
+    },
+    {
+      "label": "View My Work",
+      "href": "#projects",
+      "type": "secondary",
+      "glow": false
+    }
+  ],
+  "styling": {
+    "backgroundClass": "bg-gradient-to-br from-primary-50 via-white to-primary-100"
+  }
+}

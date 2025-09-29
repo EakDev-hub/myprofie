@@ -1,0 +1,57 @@
+{
+  "name": "react-resume-website",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Modern React Resume Website with TypeScript, Tailwind CSS, and Anime.js animations",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview",
+    "type-check": "tsc --noEmit",
+    "docker:dev": "docker-compose up --build",
+    "docker:prod": "docker-compose -f docker-compose.prod.yml up --build",
+    "ssl:generate": "mkdir -p certificates && openssl req -x509 -newkey rsa:4096 -keyout certificates/key.pem -out certificates/cert.pem -days 365 -nodes -subj '/CN=localhost'"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "animejs": "^3.2.1",
+    "react-intersection-observer": "^9.5.3",
+    "lucide-react": "^0.294.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.5",
+    "@types/react": "^18.2.43",
+    "@types/react-dom": "^18.2.17",
+    "@types/animejs": "^3.1.12",
+    "@typescript-eslint/eslint-plugin": "^6.14.0",
+    "@typescript-eslint/parser": "^6.14.0",
+    "@vitejs/plugin-react": "^4.2.1",
+    "autoprefixer": "^10.4.16",
+    "eslint": "^8.55.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.5",
+    "postcss": "^8.4.32",
+    "tailwindcss": "^3.3.6",
+    "typescript": "^5.2.2",
+    "vite": "^5.0.8"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "keywords": [
+    "react",
+    "typescript",
+    "tailwindcss",
+    "animejs",
+    "resume",
+    "portfolio",
+    "docker",
+    "vite"
+  ],
+  "author": "Eak Apisit",
+  "license": "MIT"
+}

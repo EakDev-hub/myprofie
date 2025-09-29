@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  react-resume-dev:
+    build:
+      context: .
+      target: development
+    container_name: react-resume-dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - ./certificates:/app/certificates
+    environment:
+      - NODE_ENV=development
+      - VITE_SSL_CERT=/app/certificates/cert.pem
+      - VITE_SSL_KEY=/app/certificates/key.pem
+      - CHOKIDAR_USEPOLLING=true
+    stdin_open: true
+    tty: true
+    networks:
+      - resume-network
+
+networks:
+  resume-network:
+    driver: bridge

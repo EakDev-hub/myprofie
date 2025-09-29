@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  react-resume-prod:
+    build:
+      context: .
+      target: production
+    container_name: react-resume-prod
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./certificates:/etc/nginx/certs:ro
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+    networks:
+      - resume-network
+
+networks:
+  resume-network:
+    driver: bridge
